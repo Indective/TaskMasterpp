@@ -12,6 +12,7 @@ public:
     void add_task();
     void list_tasks();
     json read_tasks();
+    void set_complete(const std::string task_name);
 
 private:
     std::string tasks = "tasks.json";

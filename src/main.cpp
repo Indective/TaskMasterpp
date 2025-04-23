@@ -23,8 +23,13 @@ int main()
         {
             if (command.substr(4,7) == "add") {tsm.add_task();}
             if (command.substr(4,8) == "list") {tsm.list_tasks();}
-            if (command.substr(4,10) == "--help") {std::cout << "Help";}
-            if (command.substr(4,8) == "exit") {exit(0);}
+            if (command.substr(4,6) == "--help") {std::cout << "Help";}
+            if (command.substr(4,4) == "exit") {exit(0);}
+            if (command.substr(4,4) == "done") {
+                std::string task_name = command.substr(9); 
+                std::cout << task_name << std::endl;
+                tsm.set_complete(task_name);
+            }
 
         }
     }
