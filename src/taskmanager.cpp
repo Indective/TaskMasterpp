@@ -109,7 +109,7 @@ void TaskManager::set_complete(const std::string task_name)
         if (found)
         {
             std::ofstream outputFile(tasks);
-            outputFile << tasksData.dump(4); // pretty print with indent = 4
+            outputFile << tasksData.dump(4); 
             outputFile.close();
         }
         else

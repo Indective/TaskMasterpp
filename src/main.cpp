@@ -27,7 +27,6 @@ int main()
             if (command.substr(4,4) == "exit") {exit(0);}
             if (command.substr(4,4) == "done") {
                 std::string task_name = command.substr(9); 
-                std::cout << task_name << std::endl;
                 tsm.set_complete(task_name);
             }
 
