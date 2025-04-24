@@ -8,12 +8,36 @@ namespace fs = std::filesystem;
 int main()
 {
     TaskManager tsm;
-
+    UserManager usm;
     std::string base_path = fs::current_path().parent_path().string();
-    fs::current_path(base_path + "/" + "data");
     std::string command;
+    std::string user_name;
+    std::string user_password;
+
+
+    usm.createdir(base_path);
+    std::cout << "Enter User Name : ";
+    std::getline(std::cin,user_name);
+
+    if(usm.check_acc(base_path,user_name))
+    {
+        std::cout << "Logging You in ." << std::endl;
+        std::cout << "Enter password : ";
+        std::getline(std::cin, user_password);
+        const char* passw = user_password.c_str();
+        usm.log_in(passw,user_name,base_path);
+    }
+    else
+    {
+        std::cout << "Sign-ing You Up ." << std::endl;
+        std::cout << "Enter password : ";
+        std::getline(std::cin, user_password);
+        const char* passw = user_password.c_str();
+        usm.sign_in(user_name,passw,base_path);
+    }
+
     while (true)
-    {        std::cout << std::endl <<"> ";
+    {   std::cout << std::endl <<"> ";
         std::getline(std::cin, command);
         if(command.substr(0,3) != "tsm")
         {
