@@ -13,21 +13,25 @@ void TaskManager::add_task()
     {   
         std::string task_name;
         std::string task_des;
+        std::string task_pri;
         std::cout << "Enter task name: ";
         std::getline(std::cin, task_name);
         std::cout << "Enter task description: ";
         std::getline(std::cin, task_des);
+        std::cout << "Enter your task priority :";
+        std::getline(std::cin,task_pri);
 
         json new_task = {
             {"task name", task_name},
             {"task des", task_des},
+            {"task priority",task_pri},
             {"done", false}
         };
         
         json tasks = read_tasks();
         tasks.push_back(new_task);
-        std::ofstream outputFile(tasks);
-        outputFile << tasks.dump(4); // Dump with indentation
+        std::ofstream outputFile("tasks.json");
+        outputFile << tasks.dump(4); 
         outputFile.close();
         std::cout << "Tasks successfully stored";
     }
@@ -52,7 +56,7 @@ void TaskManager::list_tasks()
         {
             std::cout << "Task name : " << task["task name"] << std::endl;
             std::cout << "Task des : " << task["task des"] << std::endl;
-            std::cout << "Done ?  : " << (task["done"] ? "Yes" : "No")  << std::endl;
+            std::cout << "Done ?  : " << (task["done"] ? "Yes" : "No")  << std::endl << "\n";
         }
     }
     catch(const std::exception& e)
@@ -124,7 +128,155 @@ void TaskManager::set_complete(const std::string task_name)
     
 }
 
-void TaskManager::create_task(std::string &base_path)
+void TaskManager::create_task(std::string &base_path, const std::string user_name)
 {
+    try
+    {
+        if(fs::current_path().filename() == user_name)
+        {
+            std::ofstream outfile(tasks);       
+        }
+        else if (fs::current_path().filename() == fixed_dir)
+        {
+            fs::current_path(fs::current_path().string() + "/" + user_name);
+            std::ofstream outfile(tasks);  
+        }
+        else
+        {
+            fs::current_path(fs::current_path().string() + "/" + fixed_dir + "/" + user_name);
+            std::ofstream outfile(tasks);  
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
     
 }
+
+void TaskManager::change_priority(const std::string task_name)
+{
+    try
+    {
+        std::ifstream inputFile(tasks);
+        json tasksData;
+        std::string pri;
+        inputFile >> tasksData;
+        inputFile.close();
+
+        bool found = false;
+
+        std::cout << "Enter your task priority : ";
+        std::getline(std::cin,pri);
+
+        for (auto& task : tasksData)
+        {
+            if (task["task name"] == task_name)
+            {
+                task["task priority"] = pri;
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            std::ofstream outputFile(tasks);
+            outputFile << tasksData.dump(4); 
+            outputFile.close();
+        }
+        else
+        {
+            std::cerr << "Task not found: " << task_name << '\n';
+        }
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error setting task complete: " << e.what() << '\n';
+    }
+}
+
+void TaskManager::change_taskname(const std::string task_name)
+{
+    try
+    {
+        std::ifstream inputFile(tasks);
+        json tasksData;
+        std::string ts_name;
+        inputFile >> tasksData;
+        inputFile.close();
+
+        bool found = false;
+
+        std::cout << "Enter new task name : ";
+        std::getline(std::cin,ts_name);
+
+        for (auto& task : tasksData)
+        {
+            if (task["task name"] == task_name)
+            {
+                task["task name"] = ts_name;
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            std::ofstream outputFile(tasks);
+            outputFile << tasksData.dump(4); 
+            outputFile.close();
+        }
+        else
+        {
+            std::cerr << "Task not found: " << task_name << '\n';
+        }
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error setting task complete: " << e.what() << '\n';
+    }
+}
+
+void TaskManager::change_taskdes(const std::string task_name)
+{
+    try
+    {
+        std::ifstream inputFile(tasks);
+        json tasksData;
+        std::string des;
+        inputFile >> tasksData;
+        inputFile.close();
+
+        bool found = false;
+
+        std::cout << "Enter new task description : ";
+        std::getline(std::cin,des);
+
+        for (auto& task : tasksData)
+        {
+            if (task["task name"] == task_name)
+            {
+                task["task des"] = des;
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+        {
+            std::ofstream outputFile(tasks);
+            outputFile << tasksData.dump(4); 
+            outputFile.close();
+        }
+        else
+        {
+            std::cerr << "Task not found: " << task_name << '\n';
+        }
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error setting task complete: " << e.what() << '\n';
+    }
+}
+

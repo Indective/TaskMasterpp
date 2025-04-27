@@ -13,10 +13,14 @@ public:
     void list_tasks();
     json read_tasks();
     void set_complete(const std::string task_name);
-    void create_task(std::string &base_path);
+    void create_task(std::string &base_path, const std::string user_name);
+    void change_priority(const std::string task_name);
+    void change_taskname(const std::string task_name);
+    void change_taskdes(const std::string task_name);
 
 private:
     std::string tasks = "tasks.json";
+    std::string fixed_dir = "users";
 };
 
 class UserManager{

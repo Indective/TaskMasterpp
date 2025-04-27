@@ -28,6 +28,7 @@ int main()
         if(usm.log_in(user_password,user_name,base_path))
         {
             logged_in = true;
+            tsm.create_task(base_path,user_name);
         }
     }
     else
@@ -37,6 +38,7 @@ int main()
         std::getline(std::cin, user_password);
         usm.sign_in(user_name,user_password,base_path);
         logged_in = true;
+        tsm.create_task(base_path,user_name);
     }
 
     while (logged_in)
