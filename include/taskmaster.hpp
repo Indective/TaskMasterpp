@@ -17,6 +17,7 @@ public:
     void change_priority(const std::string task_name);
     void change_taskname(const std::string task_name);
     void change_taskdes(const std::string task_name);
+    void remove_task(const std::string task_name);
 
 private:
     std::string tasks = "tasks.json";

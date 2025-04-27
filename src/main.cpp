@@ -2,6 +2,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -13,8 +14,12 @@ int main()
     std::string command;
     std::string user_name;
     std::string user_password;
+    std::string task_name;
     bool logged_in = false;
-
+    std::vector<std::string> commands = {"add","list","done","cpri","cts","ctd","rmt","--help","exit"};
+    std::vector<std::string> commands_exp = {"Create a task","Lists Tasks","sets task as completed"
+    ,"changes task priority","changes task name","changes task description","deletes a task","lists all commands with explanations"
+    ,"shuts programm off"};
 
     usm.createdir(base_path);
     std::cout << "Enter User Name : ";
@@ -51,13 +56,40 @@ int main()
         else
         {
             if (command.substr(4,7) == "add") {tsm.add_task();}
-            if (command.substr(4,8) == "list") {tsm.list_tasks();}
-            if (command.substr(4,6) == "--help") {std::cout << "Help";}
-            if (command.substr(4,4) == "exit") {exit(0);}
-            if (command.substr(4,4) == "done") {
-                std::string task_name = command.substr(9); 
+            else if (command.substr(4,8) == "list") {tsm.list_tasks();}
+            else if (command.substr(4,4) == "exit") {exit(0);}
+            else if (command.substr(4,4) == "done") {
+                task_name = command.substr(9); 
                 tsm.set_complete(task_name);
             }
+            else if (command.substr(4,4) == "cpri")
+            {
+                task_name = command.substr(9);
+                tsm.change_priority(task_name);
+            }
+            else if(command.substr(4,3) == "cts")
+            {
+                task_name = command.substr(8);
+                tsm.change_taskname(task_name);
+            }
+            else if(command.substr(4,3) == "ctd")
+            {
+                task_name = command.substr(8);
+                tsm.change_taskdes(task_name);
+            }
+            else if(command.substr(4,3) == "rmt")
+            {
+                task_name = command.substr(8);
+                tsm.remove_task(task_name);
+            }
+            else if(command.substr(4,6) == "--help")
+            {
+                for(int i = 0; i < commands.size(); i ++){
+                    std::cout << commands[i] << "               " << commands_exp[i] << std::endl;
+                }
+            }
+
+            
 
         }
     }

@@ -56,6 +56,7 @@ void TaskManager::list_tasks()
         {
             std::cout << "Task name : " << task["task name"] << std::endl;
             std::cout << "Task des : " << task["task des"] << std::endl;
+            std::cout << "Task Priority : " << task["task priority"] << std::endl;
             std::cout << "Done ?  : " << (task["done"] ? "Yes" : "No")  << std::endl << "\n";
         }
     }
@@ -280,3 +281,6 @@ void TaskManager::change_taskdes(const std::string task_name)
     }
 }
 
+void TaskManager::remove_task(const std::string task_name)
+{
+}
