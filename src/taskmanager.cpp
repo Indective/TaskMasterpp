@@ -123,3 +123,8 @@ void TaskManager::set_complete(const std::string task_name)
     }
     
 }
+
+void TaskManager::create_task(std::string &base_path)
+{
+    
+}

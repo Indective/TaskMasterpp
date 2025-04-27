@@ -13,6 +13,7 @@ public:
     void list_tasks();
     json read_tasks();
     void set_complete(const std::string task_name);
+    void create_task(std::string &base_path);
 
 private:
     std::string tasks = "tasks.json";
@@ -24,8 +25,8 @@ private:
 public :
     void createdir(std::string &base_path);
     bool checkdir(std::string &base_path);
-    void sign_in(const std::string user_name, const char* user_password, std::string &base_path);
-    bool log_in(const char* user_password,const std::string user_name, std::string &base_path);
+    void sign_in(const std::string user_name, const std::string user_password, std::string &base_path);
+    bool log_in(const std::string user_password,const std::string user_name, std::string &base_path);
     bool check_acc(std::string &base_path, const std::string user_name);
 };
 

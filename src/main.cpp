@@ -13,6 +13,7 @@ int main()
     std::string command;
     std::string user_name;
     std::string user_password;
+    bool logged_in = false;
 
 
     usm.createdir(base_path);
@@ -24,19 +25,21 @@ int main()
         std::cout << "Logging You in ." << std::endl;
         std::cout << "Enter password : ";
         std::getline(std::cin, user_password);
-        const char* passw = user_password.c_str();
-        usm.log_in(passw,user_name,base_path);
+        if(usm.log_in(user_password,user_name,base_path))
+        {
+            logged_in = true;
+        }
     }
     else
     {
         std::cout << "Sign-ing You Up ." << std::endl;
         std::cout << "Enter password : ";
         std::getline(std::cin, user_password);
-        const char* passw = user_password.c_str();
-        usm.sign_in(user_name,passw,base_path);
+        usm.sign_in(user_name,user_password,base_path);
+        logged_in = true;
     }
 
-    while (true)
+    while (logged_in)
     {   std::cout << std::endl <<"> ";
         std::getline(std::cin, command);
         if(command.substr(0,3) != "tsm")
