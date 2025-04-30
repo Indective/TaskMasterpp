@@ -49,7 +49,6 @@ void UserManager::sign_in(const std::string user_name, const std::string user_pa
         createdir(base_path);
         std::string full_path = fs::current_path().string() + "/" + user_name;
         fs::create_directory(full_path);
-        fs::current_path(full_path);
         std::ofstream outputFile(user_name);
         std::string hash = bcrypt::generateHash(user_password);
         if(outputFile.is_open())
@@ -69,7 +68,7 @@ bool UserManager::log_in(const std::string user_password,const std::string user_
     std::string hash;
     std::ifstream inputfile(user_name);
     std::getline(inputfile, hash);
-    if(bcrypt::validatePassword(user_password,hash) == 0)
+    if(bcrypt::validatePassword(user_password,hash) == 1)
     {
         std::cout << "Log in complete !" << std::endl;
         return true;
@@ -95,6 +94,7 @@ bool UserManager::check_acc(std::string &base_path, const std::string user_name)
                 if(i.path().filename() == user_name)
                 {
                     return true;
+                    fs::current_path(fs::current_path().string() + "/" + user_name);
                 }
             }
             return false;
@@ -107,6 +107,7 @@ bool UserManager::check_acc(std::string &base_path, const std::string user_name)
                 if(i.path().filename() == user_name)
                 {
                     return true;
+                    fs::current_path(fs::current_path().string() + "/" + user_name);
                 }
             }
             return false;

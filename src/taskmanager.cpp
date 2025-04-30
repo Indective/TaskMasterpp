@@ -25,7 +25,7 @@ void TaskManager::add_task()
             {"task name", task_name},
             {"task des", task_des},
             {"task priority",task_pri},
-            {"done", false}
+            {"done", "false"}
         };
         
         json tasks = read_tasks();
@@ -47,17 +47,16 @@ void TaskManager::list_tasks()
     try
     {
         std::ifstream inputFile(tasks);
-        json tasks;
-        inputFile >> tasks;
-    
+        json data;
+        inputFile >> data;
         inputFile.close();
-        
-        for(auto &task : tasks)
+                 
+        for(auto task : data)
         {
             std::cout << "Task name : " << task["task name"] << std::endl;
             std::cout << "Task des : " << task["task des"] << std::endl;
             std::cout << "Task Priority : " << task["task priority"] << std::endl;
-            std::cout << "Done ?  : " << (task["done"] ? "Yes" : "No")  << std::endl << "\n";
+            std::cout << "Done ?  : " << task["done"] << std::endl << "\n";
         }
     }
     catch(const std::exception& e)
@@ -73,7 +72,7 @@ json TaskManager::read_tasks()
     try
     {
         std::ifstream inputFile(tasks);
-        
+        std::cout << fs::current_path().string();
 
         if (inputFile.peek() != std::ifstream::traits_type::eof()) {
             inputFile >> data;
@@ -105,7 +104,7 @@ void TaskManager::set_complete(const std::string task_name)
         {
             if (task["task name"] == task_name)
             {
-                task["done"] = true;
+                task["done"] = "true";
                 found = true;
                 break;
             }
@@ -283,4 +282,29 @@ void TaskManager::change_taskdes(const std::string task_name)
 
 void TaskManager::remove_task(const std::string task_name)
 {
+    try
+    {
+        json data = read_tasks();
+        for (auto it = data.begin(); it != data.end(); ) {
+            if ((*it)["task name"] == task_name) {
+                it = data.erase(it); // erase returns the next valid iterator
+            } else {
+                ++it;
+            }
+        }
+        std::cout << "Task deleted." << std::endl;
+    
+        std::ofstream outFile(tasks);
+        if (outFile.is_open()) {
+            outFile << data.dump(4);  // Pretty-print with indentation
+            outFile.close();
+        } else {
+            std::cerr << "Failed to write to file.\n";
+            return;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }

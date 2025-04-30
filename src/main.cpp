@@ -33,7 +33,7 @@ int main()
         if(usm.log_in(user_password,user_name,base_path))
         {
             logged_in = true;
-            tsm.create_task(base_path,user_name);
+            fs::current_path(fs::current_path().string() + "/" + user_name);
         }
     }
     else
@@ -44,6 +44,7 @@ int main()
         usm.sign_in(user_name,user_password,base_path);
         logged_in = true;
         tsm.create_task(base_path,user_name);
+        fs::current_path(fs::current_path().string() + "/" + user_name);
     }
 
     while (logged_in)
@@ -57,8 +58,9 @@ int main()
         {
             if (command.substr(4,7) == "add") {tsm.add_task();}
             else if (command.substr(4,8) == "list") {tsm.list_tasks();}
-            else if (command.substr(4,4) == "exit") {exit(0);}
-            else if (command.substr(4,4) == "done") {
+            else if (command.substr(4,4) == "exit") {return 0;}
+            else if (command.substr(4,4) == "done") 
+            {
                 task_name = command.substr(9); 
                 tsm.set_complete(task_name);
             }
