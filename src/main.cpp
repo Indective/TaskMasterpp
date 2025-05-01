@@ -33,7 +33,6 @@ int main()
         if(usm.log_in(user_password,user_name,base_path))
         {
             logged_in = true;
-            fs::current_path(fs::current_path().string() + "/" + user_name);
         }
     }
     else
@@ -44,7 +43,6 @@ int main()
         usm.sign_in(user_name,user_password,base_path);
         logged_in = true;
         tsm.create_task(base_path,user_name);
-        fs::current_path(fs::current_path().string() + "/" + user_name);
     }
 
     while (logged_in)
@@ -56,33 +54,68 @@ int main()
         }
         else
         {
-            if (command.substr(4,7) == "add") {tsm.add_task();}
-            else if (command.substr(4,8) == "list") {tsm.list_tasks();}
+            if (command.substr(4,3) == "add") {tsm.add_task();}
+            else if (command.substr(4,4) == "list") {tsm.list_tasks();}
             else if (command.substr(4,4) == "exit") {return 0;}
             else if (command.substr(4,4) == "done") 
             {
-                task_name = command.substr(9); 
-                tsm.set_complete(task_name);
+                if(tsm.check_command(8,command))
+                {
+                    task_name = command.substr(9); 
+                    tsm.set_complete(task_name);
+                }
+                else
+                {
+                    std::cout << "Invalid command syntax" << std::endl;;
+                }
             }
             else if (command.substr(4,4) == "cpri")
             {
-                task_name = command.substr(9);
-                tsm.change_priority(task_name);
+                if(tsm.check_command(8,command))
+                {
+                    task_name = command.substr(9);
+                    tsm.change_priority(task_name);
+                }
+                else
+                {
+                    std::cout << "Invalid command syntax" << std::endl;;
+                }
             }
             else if(command.substr(4,3) == "cts")
             {
-                task_name = command.substr(8);
-                tsm.change_taskname(task_name);
+                if(tsm.check_command(7,command))
+                {
+                    task_name = command.substr(8);
+                    tsm.change_taskname(task_name);
+                }
+                else
+                {
+                    std::cout << "Invalid command syntax" << std::endl;;
+                }
             }
             else if(command.substr(4,3) == "ctd")
             {
-                task_name = command.substr(8);
-                tsm.change_taskdes(task_name);
+                if(tsm.check_command(7,command))
+                {
+                    task_name = command.substr(8);
+                    tsm.change_taskdes(task_name);
+                }
+                else
+                {
+                    std::cout << "Invalid command syntax" << std::endl;;
+                }
             }
             else if(command.substr(4,3) == "rmt")
             {
-                task_name = command.substr(8);
-                tsm.remove_task(task_name);
+                if(tsm.check_command(7,command))
+                {
+                    task_name = command.substr(8);
+                    tsm.remove_task(task_name);
+                }
+                else
+                {
+                    std::cout << "Invalid command syntax" << std::endl;;
+                }
             }
             else if(command.substr(4,6) == "--help")
             {

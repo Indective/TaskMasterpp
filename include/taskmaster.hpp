@@ -18,6 +18,7 @@ public:
     void change_taskname(const std::string task_name);
     void change_taskdes(const std::string task_name);
     void remove_task(const std::string task_name);
+    bool check_command(const int base_length, const std::string command);
 
 private:
     std::string tasks = "tasks.json";

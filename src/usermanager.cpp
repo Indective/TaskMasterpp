@@ -3,6 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <algorithm> // For std::remove
 
 namespace fs  = std::filesystem;
 
@@ -63,26 +64,30 @@ void UserManager::sign_in(const std::string user_name, const std::string user_pa
     }
 }
 
-bool UserManager::log_in(const std::string user_password,const std::string user_name, std::string &base_path)
+bool UserManager::log_in(const std::string user_password, const std::string user_name, std::string &base_path)
 {
-    std::string hash;
+    fs::current_path(fs::current_path().string() + "/" +  user_name);
     std::ifstream inputfile(user_name);
-    std::getline(inputfile, hash);
-    if(bcrypt::validatePassword(user_password,hash) == 1)
-    {
-        std::cout << "Log in complete !" << std::endl;
-        return true;
-    }
-    else
-    {
-        std::cout << "Log in incomplete !" << std::endl;
+    if (!inputfile.is_open()) {
+        std::cerr << "Error: Could not open file for user " << user_name << std::endl;
         return false;
     }
+
+    std::string hash;
+    std::getline(inputfile, hash);
     inputfile.close();
-    return false;
+
+    bool result = bcrypt::validatePassword(user_password, hash);
+
+    if (result) {
+        std::cout << "Log in complete!" << std::endl;
+        return true;
+    } else {
+        std::cout << "Log in incomplete!" << std::endl;
+        return false;
+    }
 
 }
-
 bool UserManager::check_acc(std::string &base_path, const std::string user_name)
 {
     try

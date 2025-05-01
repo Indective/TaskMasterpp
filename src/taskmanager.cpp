@@ -308,3 +308,13 @@ void TaskManager::remove_task(const std::string task_name)
         std::cerr << e.what() << '\n';
     }
 }
+
+bool TaskManager::check_command(const int base_length, const std::string command)
+{
+    //base length = tsm + {command name} length
+    if(command.substr(base_length) == "")
+    {
+        return true;
+    }
+    return false;
+}
