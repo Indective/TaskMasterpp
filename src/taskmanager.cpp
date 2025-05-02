@@ -104,9 +104,17 @@ void TaskManager::set_complete(const std::string task_name)
         {
             if (task["task name"] == task_name)
             {
-                task["done"] = "true";
-                found = true;
-                break;
+                if(task["done"] == "true")
+                {
+                    std::cout << "Task already set as completed." << std::endl;
+                    return;
+                }
+                else
+                {
+                    task["done"] = "true";
+                    found = true;
+                    break;
+                }
             }
         }
 
@@ -312,9 +320,10 @@ void TaskManager::remove_task(const std::string task_name)
 bool TaskManager::check_command(const int base_length, const std::string command)
 {
     //base length = tsm + {command name} length
-    if(command.substr(base_length) == "")
+    std::string letter = command.substr(base_length);
+    if(letter.empty() or letter == " ")
     {
-        return true;
+        return false;
     }
-    return false;
+    return true;
 }
