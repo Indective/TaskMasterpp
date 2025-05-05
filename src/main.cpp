@@ -11,39 +11,23 @@ int main()
     TaskManager tsm;
     UserManager usm;
     std::string base_path = fs::current_path().parent_path().string();
-    std::string command;
-    std::string user_name;
-    std::string user_password;
-    std::string task_name;
+    std::string command, user_name, user_password, task_name;
     bool logged_in = false;
-    std::vector<std::string> commands = {"add","list","done","cpri","cts","ctd","rmt","--help","exit"};
-    std::vector<std::string> commands_exp = {"Create a task","Lists Tasks","sets task as completed"
-    ,"changes task priority","changes task name","changes task description","deletes a task","lists all commands with explanations"
-    ,"shuts programm off"};
+
+    const std::vector<std::pair<std::string, std::string>> commands = {
+        {"add", "Create a task"},
+        {"list", "Lists Tasks"},
+        {"done", "Sets task as completed"},
+        {"cpri", "Changes task priority"},
+        {"cts", "Changes task name"},
+        {"ctd", "Changes task description"},
+        {"rmt", "Deletes a task"},
+        {"--help", "Lists all commands with explanations"},
+        {"exit", "Shuts program off"}
+    };
 
     usm.createdir(base_path);
-    std::cout << "Enter User Name : ";
-    std::getline(std::cin,user_name);
-
-    if(usm.check_acc(base_path,user_name))
-    {
-        std::cout << "Logging You in ." << std::endl;
-        std::cout << "Enter password : ";
-        std::getline(std::cin, user_password);
-        if(usm.log_in(user_password,user_name,base_path))
-        {
-            logged_in = true;
-        }
-    }
-    else
-    {
-        std::cout << "Sign-ing You Up ." << std::endl;
-        std::cout << "Enter password : ";
-        std::getline(std::cin, user_password);
-        usm.sign_in(user_name,user_password,base_path);
-        logged_in = true;
-        tsm.create_task(base_path,user_name);
-    }
+    usm.acc(user_name, usm, base_path, user_password, logged_in, tsm);
 
     while (logged_in)
     {   std::cout << std::endl <<"> ";
@@ -119,9 +103,14 @@ int main()
             }
             else if(command.substr(4,6) == "--help")
             {
-                for(int i = 0; i < commands.size(); i ++){
-                    std::cout << commands[i] << "               " << commands_exp[i] << std::endl;
+                for(const auto &i: commands)
+                {
+                    std::cout << i.first << i.second;
                 }
+            }
+            else
+            {
+                std::cout << "Invalid command." << std::endl;
             }
 
             
@@ -131,3 +120,5 @@ int main()
     
     return 0;
 }
+
+

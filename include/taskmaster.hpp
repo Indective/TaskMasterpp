@@ -29,6 +29,7 @@ class UserManager{
 private:
     std::string fixed_dir = "users";
 public :
+    void acc(std::string &user_name, UserManager &usm, std::string &base_path, std::string &user_password, bool &logged_in, TaskManager &tsm);
     void createdir(std::string &base_path);
     bool checkdir(std::string &base_path);
     void sign_in(const std::string user_name, const std::string user_password, std::string &base_path);

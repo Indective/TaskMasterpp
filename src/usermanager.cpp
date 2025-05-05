@@ -3,7 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
-#include <algorithm> // For std::remove
+#include <algorithm> 
 
 namespace fs  = std::filesystem;
 
@@ -23,6 +23,31 @@ bool UserManager::checkdir(std::string &base_path)
         std::cout << e.what() << std::endl;
     }
     return false;
+}
+
+void UserManager::acc(std::string &user_name, UserManager &usm, std::string &base_path, std::string &user_password, bool &logged_in, TaskManager &tsm)
+{
+    std::cout << "Enter User Name: ";
+    std::getline(std::cin, user_name);
+    if (usm.check_acc(base_path, user_name))
+    {
+        std::cout << "Logging You in ." << std::endl;
+        std::cout << "Enter password : ";
+        std::getline(std::cin, user_password);
+        if (usm.log_in(user_password, user_name, base_path))
+        {
+            logged_in = true;
+        }
+    }
+    else
+    {
+        std::cout << "Sign-ing You Up ." << std::endl;
+        std::cout << "Enter password : ";
+        std::getline(std::cin, user_password);
+        usm.sign_in(user_name, user_password, base_path);
+        logged_in = true;
+        tsm.create_task(base_path, user_name);
+    }
 }
 
 void UserManager::createdir(std::string &base_path)
