@@ -150,4 +150,3 @@ bool UserManager::check_acc(std::string &base_path, const std::string user_name)
     }
     return false;
 }
-

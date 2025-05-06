@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <cstdlib> // for std::getenv and system()
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;
@@ -72,7 +73,6 @@ json TaskManager::read_tasks()
     try
     {
         std::ifstream inputFile(tasks);
-        std::cout << fs::current_path().string();
 
         if (inputFile.peek() != std::ifstream::traits_type::eof()) {
             inputFile >> data;
@@ -327,3 +327,17 @@ bool TaskManager::check_command(const int base_length, const std::string command
     }
     return true;
 }
+
+void TaskManager::cls()
+{
+    #ifdef _WIN32
+        if (std::getenv("TERM")) {
+            std::cout << "\033[2J\033[H" << std::flush;
+        } else {
+            system("cls");
+        }
+    #else
+        std::cout << "\033[2J\033[H" << std::flush;
+    #endif   
+}
+

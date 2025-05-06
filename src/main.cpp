@@ -23,7 +23,9 @@ int main()
         {"ctd", "Changes task description"},
         {"rmt", "Deletes a task"},
         {"--help", "Lists all commands with explanations"},
-        {"exit", "Shuts program off"}
+        {"exit", "Shuts program off"},
+        {"cls", "Clears terminal screen"},
+        {"logout", "Logs out and prompt logging-in screen"}
     };
 
     usm.createdir(base_path);
@@ -40,7 +42,7 @@ int main()
         {
             if (command.substr(4,3) == "add") {tsm.add_task();}
             else if (command.substr(4,4) == "list") {tsm.list_tasks();}
-            else if (command.substr(4,4) == "exit") {return 0;}
+            else if (command.substr(4,4) == "exit") {logged_in = false;}
             else if (command.substr(4,4) == "done") 
             {
                 if(tsm.check_command(8,command))
@@ -107,6 +109,10 @@ int main()
                 {
                     std::cout << i.first << i.second;
                 }
+            }
+            else if(command.substr(4,3) == "cls")
+            {
+                tsm.cls();
             }
             else
             {
