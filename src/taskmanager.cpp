@@ -4,37 +4,39 @@
 #include <fstream>
 #include <filesystem>
 #include <cstdlib> // for std::getenv and system()
+#include <vector>
+#include <iomanip> // for std::quoted
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;
 
-void TaskManager::add_task()
+void TaskManager::add_task(const std::string &command)
 {
     try
-    {   
-        std::string task_name;
-        std::string task_des;
-        std::string task_pri;
-        std::cout << "Enter task name: ";
-        std::getline(std::cin, task_name);
-        std::cout << "Enter task description: ";
-        std::getline(std::cin, task_des);
-        std::cout << "Enter your task priority :";
-        std::getline(std::cin,task_pri);
+    {  
+        std::vector<std::string> tokens = tokenize(command);
+        if (tokens.size() != 7)
+        {
+            std::cout << "Invalid command syntax" << std::endl;
+            std::cout << "command structure must be <tsm add [quoted command name] --description [quoted discreption] --priority [quoted priority]>" << std::endl;
 
-        json new_task = {
-            {"task name", task_name},
-            {"task des", task_des},
-            {"task priority",task_pri},
-            {"done", "false"}
-        };
-        
-        json tasks = read_tasks();
-        tasks.push_back(new_task);
-        std::ofstream outputFile("tasks.json");
-        outputFile << tasks.dump(4); 
-        outputFile.close();
-        std::cout << "Tasks successfully stored";
+        }
+        else
+        {
+            json new_task = {
+                {"task name", tokens[2]},
+                {"task des", tokens[4]},
+                {"task priority",tokens[6]},
+                {"done", "false"}
+            };
+            
+            json tasks = read_tasks();
+            tasks.push_back(new_task);
+            std::ofstream outputFile("tasks.json");
+            outputFile << tasks.dump(4); 
+            outputFile.close();
+            std::cout << "Tasks successfully stored";
+        }
     }
     catch(const std::exception& e)
     {
@@ -341,3 +343,110 @@ void TaskManager::cls()
     #endif   
 }
 
+std::vector<std::string> TaskManager::tokenize(const std::string &command)
+{
+    std::vector<std::string> tokens;
+    try
+    {
+        std::istringstream iss(command);
+        std::string token;
+    
+        while (iss >> std::quoted(token)) {
+            tokens.push_back(token);
+        }
+    
+        return tokens;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    return tokens;
+}
+
+bool TaskManager::check_command_syntax(const std::string &command, const std::vector<std::pair<std::string, std::string>> commands)
+{
+    try
+    {
+        std::vector<std::string> tokens = tokenize(command);
+        if(tokens[0] != "tsm")
+        {
+            std::cout << "Invalid command syntax; command must start with <tsm>." << std::endl;
+            return false;
+        }
+        else
+        {
+            for(const auto &i: commands)
+            {
+                if(i.first == tokens[1])  // Validate command: tokens[1] must match a known command
+                {
+                    return true;
+                }
+            }
+            std::cout << "Invalid command syntax; command does not exist." << std::endl;
+            std::cout << "Use <tsm --help> to see all current commands." << std::endl;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    return false;
+}
+
+void TaskManager::handle_commands(const std::string &command, const std::vector<std::pair<std::string, std::string>> commands)
+{
+    try
+    {
+        std::vector<std::string> tokens = tokenize(command);
+        if (tokens[1] == "add")
+        {
+            add_task(command);
+        }
+        else if(tokens[1] == "list")
+        {
+            list_tasks();
+        }
+        else if(tokens[1] == "done")
+        {
+            set_complete(tokens [2]);
+        }
+        else if(tokens[1] == "rename")
+        {
+            change_taskname(tokens[2]);
+        }
+        else if(tokens[1] == "describe")
+        {
+            change_taskdes(tokens[1]);
+        }
+        else if(tokens[1] == "priority")
+        {
+            change_priority(tokens[1]);
+        }
+        else if(tokens[1] == "remove")
+        {
+            remove_task(tokens[1]);
+        }
+        else if(tokens[1] == "cls")
+        {
+            cls();
+        }
+        else if(tokens[1] == "--help")
+        {
+            for(const auto &i : commands)
+            {
+                std::cout << i.first << "  -  " << i.second << std::endl;
+            }
+        }
+        else if(tokens[1] == "exit")
+        {
+            exit(0);
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+}

@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 class TaskManager {
 public:
-    void add_task();
+    void add_task(const std::string &command);
     void list_tasks();
     json read_tasks();
     void set_complete(const std::string task_name);
@@ -20,6 +20,9 @@ public:
     void remove_task(const std::string task_name);
     bool check_command(const int base_length, const std::string command);
     void cls();
+    std::vector<std::string> tokenize(const std::string &command);
+    bool check_command_syntax(const std::string &command,const std::vector<std::pair<std::string, std::string>> commands);
+    void handle_commands(const std::string &command, const std::vector<std::pair<std::string, std::string>> commands);
 
 private:
     std::string tasks = "tasks.json";
