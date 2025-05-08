@@ -418,15 +418,15 @@ void TaskManager::handle_commands(const std::string &command, const std::vector<
         }
         else if(tokens[1] == "describe")
         {
-            change_taskdes(tokens[1]);
+            change_taskdes(tokens[2]);
         }
         else if(tokens[1] == "priority")
         {
-            change_priority(tokens[1]);
+            change_priority(tokens[2]);
         }
         else if(tokens[1] == "remove")
         {
-            remove_task(tokens[1]);
+            remove_task(tokens[2]);
         }
         else if(tokens[1] == "cls")
         {
