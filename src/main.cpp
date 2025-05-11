@@ -35,11 +35,18 @@ int main()
 
     while (logged_in)
     {   
-        std::cout << std::endl <<"> ";
-        std::getline(std::cin, command);
-        if(task_mgr.check_command_syntax(command, commands))
+        try
         {
-            task_mgr.handle_commands(command, commands);
+            std::cout << std::endl <<"> ";
+            std::getline(std::cin, command);
+            if(task_mgr.check_command_syntax(command, commands))
+            {
+                task_mgr.handle_commands(command, commands);
+            }
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
         }
     }
     
