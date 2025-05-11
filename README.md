@@ -73,7 +73,7 @@ make
 - **C++17**
 - **CMake**
 - **nlohmann/json** (for parsing JSON)
-- **OpenBSD bcrypt** (for password hashing)
+- **Bcrypt-cpp** (for password hashing)
 
 ## 📄 License
 

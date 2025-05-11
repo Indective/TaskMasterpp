@@ -1,4 +1,5 @@
-#include "taskmaster.hpp"
+#include "taskmaster.h"
+#include "usermanager.h"
 #include <iostream>
 #include <filesystem>
 #include <fstream>
@@ -30,7 +31,7 @@ int main()
     
 
     user_mgr.createdir(base_path);
-    user_mgr.acc(user_name, user_mgr, base_path, user_password, logged_in, task_mgr);
+    user_mgr.acc(user_name, base_path, user_password, logged_in);
 
     while (logged_in)
     {   

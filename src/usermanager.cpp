@@ -1,4 +1,4 @@
-#include "taskmaster.hpp"
+#include "usermanager.h"
 #include <bcrypt.h>
 #include <iostream>
 #include <filesystem>
@@ -7,7 +7,7 @@
 
 namespace fs  = std::filesystem;
 
-bool UserManager::checkdir(std::string &base_path)
+bool UserManager::checkdir(std::string_view base_path)
 {
     try{
         for (auto const& i : fs::directory_iterator{base_path})
@@ -25,16 +25,16 @@ bool UserManager::checkdir(std::string &base_path)
     return false;
 }
 
-void UserManager::acc(std::string &user_name, UserManager &usm, std::string &base_path, std::string &user_password, bool &logged_in, TaskManager &tsm)
+void UserManager::acc(std::string &user_name, const std::string base_path, std::string& user_password, bool &logged_in)
 {
     std::cout << "Enter User Name: ";
     std::getline(std::cin, user_name);
-    if (usm.check_acc(base_path, user_name))
+    if (check_acc(base_path, user_name))
     {
         std::cout << "Logging You in ." << std::endl;
         std::cout << "Enter password : ";
         std::getline(std::cin, user_password);
-        if (usm.log_in(user_password, user_name, base_path))
+        if (log_in(user_password, user_name, base_path))
         {
             logged_in = true;
         }
@@ -44,13 +44,13 @@ void UserManager::acc(std::string &user_name, UserManager &usm, std::string &bas
         std::cout << "Sign-ing You Up ." << std::endl;
         std::cout << "Enter password : ";
         std::getline(std::cin, user_password);
-        usm.sign_in(user_name, user_password, base_path);
+        sign_in(user_name, user_password, base_path);
         logged_in = true;
-        tsm.create_task(base_path, user_name);
+        create_task(base_path, user_name);
     }
 }
 
-void UserManager::createdir(std::string &base_path)
+void UserManager::createdir(const std::string base_path)
 {
     try
     {
@@ -68,7 +68,7 @@ void UserManager::createdir(std::string &base_path)
     }
 }
 
-void UserManager::sign_in(const std::string user_name, const std::string user_password, std::string &base_path)
+void UserManager::sign_in(const std::string user_name, const std::string user_password, const std::string base_path)
 {
     try
     {
@@ -89,7 +89,7 @@ void UserManager::sign_in(const std::string user_name, const std::string user_pa
     }
 }
 
-bool UserManager::log_in(const std::string user_password, const std::string user_name, std::string &base_path)
+bool UserManager::log_in(const std::string user_password, const std::string user_name, std::string_view base_path)
 {
     fs::current_path(fs::current_path().string() + "/" +  user_name);
     std::ifstream inputfile(user_name);
@@ -113,7 +113,8 @@ bool UserManager::log_in(const std::string user_password, const std::string user
     }
 
 }
-bool UserManager::check_acc(std::string &base_path, const std::string user_name)
+
+bool UserManager::check_acc(std::string_view base_path, const std::string user_name)
 {
     try
     {

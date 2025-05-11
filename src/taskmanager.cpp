@@ -1,11 +1,12 @@
-#include "taskmaster.hpp"
-#include  <json.hpp>
+#include "taskmaster.h"
+#include  <nlohmann/json.hpp>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <cstdlib> // for std::getenv and system()
 #include <vector>
 #include <iomanip> // for std::quoted
+#include <sstream>
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;
@@ -138,7 +139,7 @@ void TaskManager::set_complete(const std::string task_name)
     
 }
 
-void TaskManager::create_task(std::string &base_path, const std::string user_name)
+void TaskManager::create_task(std::string_view base_path, const std::string user_name)
 {
     try
     {
