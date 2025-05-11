@@ -18,14 +18,16 @@ Taskmaster++ is a terminal-based task management application written in modern C
 ├── data                   # User-specific task data
 │   └── users
 │       ├── indective/     #example test unit
-│       └── muhammad/      #example test unit 
+│       └── muhammad/      #example test unit
+| 
+|── libs                   #external libraries 
+|   └── json
+|   └── Bcrypt.cpp
 |
 ├── include                # Header files
-│   ├── bcrypt.h
-│   ├── json.hpp
-│   └── taskmaster.hpp
+│   ├── usermanager.h
+│   └── taskmaster.h
 ├── src                    # Source code
-│   ├── bcrypt/
 │   ├── main.cpp
 │   ├── taskmanager.cpp
 │   └── usermanager.cpp
